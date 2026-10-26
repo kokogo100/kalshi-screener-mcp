@@ -1,0 +1,41 @@
+{
+  "name": "kalshi-screener-mcp",
+  "version": "0.3.0",
+  "description": "Read-only MCP server for screening Kalshi prediction markets. Works with Claude, ChatGPT, Grok, Meta Muse, Cursor and VS Code, and shares data with the Kalshi Screener Chrome extension.",
+  "type": "module",
+  "bin": {
+    "kalshi-screener-mcp": "bin/cli.js"
+  },
+  "main": "src/server.js",
+  "files": [
+    "bin",
+    "src",
+    "core",
+    "README.md",
+    "LICENSE",
+    "PRIVACY.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "kalshi",
+    "prediction-markets",
+    "mcp",
+    "model-context-protocol",
+    "screener"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "start": "node bin/cli.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^4.6.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kokogo100/kalshi-screener-mcp.git"
+  },
+  "homepage": "https://github.com/kokogo100/kalshi-screener-mcp"
+}

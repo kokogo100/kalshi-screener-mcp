@@ -1,0 +1,10 @@
+# Deploys to the user's own Cloudflare account. Nothing runs on the author's servers.
+name = "kalshi-screener-mcp"
+main = "worker/index.js"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "STATE"
+
+# Set the access key once with:  npx wrangler secret put ACCESS_KEY
