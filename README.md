@@ -1,21 +1,49 @@
-# Kalshi Screener MCP
+# Kalshi Screener: Chrome extension + MCP server
 
-> Kalshi Screener is an independent project. It is not affiliated with, endorsed by or sponsored by Kalshi. Market information only, not financial advice.
+> **For research and education.** Kalshi Screener is a free, open-source, read-only tool. It never places trades, gives no buy or sell advice and is not financial advice. It is an independent project, not affiliated with, endorsed by or sponsored by Kalshi. Use it at your own risk.
 
-Screen Kalshi prediction markets from your AI app. Ask things like:
+Screen and monitor Kalshi prediction markets with your own conditions, get alerts when a market matches, and ask your AI about them.
+
+| Scanner | Alerts | Bring your own AI |
+|---|---|---|
+| ![Scanner](docs/images/01-scanner.png) | ![Alerts](docs/images/02-alerts.png) | ![AI](docs/images/03-ai.png) |
+
+This repository has two parts. Use either one or both.
+
+- **Chrome extension** (`extension/`): a side panel that screens public market data, repeats your screen in the background and alerts you. No Kalshi account or API key needed.
+- **MCP server** (everything else): lets Claude, ChatGPT, Cursor, VS Code and other AI apps search markets and read your saved conditions, watchlist and alerts.
+
+No ads, no analytics, no hosted service. Everything runs on your computer (or your own Cloudflare account).
+
+## Install the Chrome extension
+
+The extension is not on the Chrome Web Store. Install it from this repository in developer mode:
+
+1. Download **kalshi-screener-extension-0.3.0.zip** from [Releases](https://github.com/kokogo100/kalshi-screener-mcp/releases/latest) (or download this repository and use its `extension` folder).
+2. Unzip it to a folder you will keep (Chrome loads the extension from that folder, so do not delete it).
+3. Open `chrome://extensions` in Chrome.
+4. Turn on **Developer mode** (top right).
+5. Click **Load unpacked** and choose the unzipped folder (the one that contains `manifest.json`).
+6. Pin Kalshi Screener from the puzzle icon and click it to open the side panel.
+
+To update, download the new zip, replace the folder contents and click the reload icon on the extension card in `chrome://extensions`. Your settings stay in Chrome.
+
+Chrome may show a notice about developer mode extensions. That is normal for extensions installed this way. You can read every line of the code in `extension/`.
+
+## Install the MCP server
+
+Works with Claude (Desktop, Code and web), ChatGPT, Grok, Cursor and VS Code. Paired with the Chrome extension, your saved conditions, watchlist and alerts are shared with the AI, and every result has an **Open in Kalshi Screener** link.
+
+**Read-only.** It uses Kalshi's public market data, never places or cancels orders, and gives no buy or sell advice.
+
+Ask things like:
 
 - "Find markets priced 80c or higher that close in the next 48 hours."
 - "Which markets were listed in the last day?"
 - "Show every market in this event ranked by price."
 - "Run my 'Closing soon' screen and list today's alerts."
 
-Works with Claude (Desktop, Code and web), ChatGPT, Grok, Meta Muse, Cursor and VS Code. It pairs with the free **Kalshi Screener** Chrome extension: your saved conditions, watchlist and alerts are shared with the AI, and every result has an **Open in Kalshi Screener** link.
-
-**Read-only.** It uses Kalshi's public market data, never places or cancels orders, and gives no buy or sell advice. No Kalshi account or API key is needed.
-
-**No hosted service.** The server runs on your computer or on your own Cloudflare account. Nothing goes through the author's servers.
-
-## 1. Desktop AI apps (runs on your computer)
+### Desktop AI apps (runs on your computer)
 
 Requires [Node.js](https://nodejs.org) 20 or later. The server is not published to npm; it runs from this folder.
 
@@ -41,7 +69,7 @@ claude mcp add kalshi-screener -- node "C:/path/to/kalshi-screener-mcp/bin/cli.j
 
 Restart the app. In the Chrome extension, Settings, AI Agents (MCP) builds the same settings from the folder path you paste and has a copy button.
 
-### Share data from the Chrome extension
+#### Share data from the Chrome extension
 
 In the extension, open Settings, AI Agents (MCP), turn on **Share with the MCP server on this computer** and press **Check and share now**. The extension then sends your condition presets, watchlist and recent alerts to `127.0.0.1` whenever they change and after each background check. API keys and AI settings are never sent. Only the extension can write to this local endpoint; web pages are refused.
 
@@ -49,7 +77,7 @@ The first extension that shares data is paired with the server, so other install
 
 Open in Kalshi Screener links use `chrome-extension://`. Some desktop apps cannot open them directly; copy the link into Chrome's address bar instead.
 
-## 2. Web AI apps (ChatGPT, Grok, Meta Muse, Claude on the web)
+### Web AI apps (ChatGPT, Grok, Meta Muse, Claude on the web)
 
 These apps connect to a web address, so deploy your own free copy to Cloudflare Workers.
 
@@ -76,6 +104,23 @@ These apps connect to a web address, so deploy your own free copy to Cloudflare 
 Optional: set `EXTENSION_ID` (`npx wrangler secret put EXTENSION_ID`) to your extension ID so remote results include Open in Kalshi Screener links.
 
 Cloudflare's free plan allows about 50 outbound requests per call. Very broad searches over every open market can exceed that; the server then asks you to narrow the search (for example `scope: "closing_24h"`). The local server has no such limit.
+
+## How Your AI Combines Conditions from Plain-Language Prompts
+
+You do **not** have to rely only on pre-built presets. When you ask a question in plain language, your AI automatically combines the filter parameters in `search_markets`, and can even save new screens for you:
+
+1. **Ad-hoc Multi-Condition Screening (AI combines filters automatically):**
+   Ask your AI in any language:
+   - *"Find Kalshi markets closing within 24 hours with a YES price of 80c or higher, a bid-ask spread under 5%, and at least 500 contracts of 24h volume."*
+   - *"Show only the #1 favorite market in each event where the event has at least 4 outcomes and closes within 7 days."*
+   - *"Find multi-outcome events where the sum of all YES ask prices is below 98c."*
+   Your AI translates your prompt into `search_markets` filter parameters (`scope`, `text`, `min_yes_price`, `max_yes_price`, `min_yes_bid`, `max_yes_ask`, `max_hours_to_close`, `min_hours_to_close`, `listed_within_hours`, `min_volume_24h`, `min_open_interest`, `max_spread_pct`, `min_change_pct`, `max_change_pct`, `event_favorite_only`, `min_event_markets`, `max_event_yes_ask_total`, `sort`) and runs the scan live.
+2. **Save Any Prompt-Built Screen by Voice/Text (`save_screen`):**
+   - Tell your AI: *"Save that filter combination as 'Closing Soon Favorites'."*
+   - Your AI calls `save_screen` so you can reuse it anytime.
+3. **Run Your Saved or Chrome Extension Presets (`list_saved_screens`, `run_saved_screen`):**
+   - Presets you saved in the **Kalshi Screener Chrome extension** (when MCP sharing is enabled) and screens saved via `save_screen` can both be run on demand: *"Run my 'Closing Soon Favorites' screen and summarize the top matches."*
+   - Inside the Chrome extension itself, typing a natural-language search in the bottom **Kalshi Screener Chat** and pressing **`Send`** or **`Draft`** also builds full boolean condition stacks (`A AND (B OR C) AND NOT D`) across all 45 Scanner Lab templates.
 
 ## Tools
 
@@ -138,12 +183,14 @@ node bin/cli.js --http     MCP over HTTP at http://127.0.0.1:47811/mcp
 
 `KALSHI_SCREENER_EXTENSION_ID` sets the extension ID used in links before the extension has shared data.
 
-## Questions and inquiries
+## Questions
 
-This project does not take code contributions. For bugs, open an issue. For advertising in the Chrome extension, open an issue titled "Advertising inquiry".
+For bugs and ideas, open an issue. Other questions: **contact@axnli.com**.
 
 ## License
 
-Free for individuals, including your own trading, research and analysis. Business use needs a commercial license.
+Open source under the [MIT License](LICENSE). Free for personal and commercial use. See [PRIVACY.md](PRIVACY.md) for what the extension and server do with your data.
 
-Licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) with an additional permission for individuals' personal trading. Companies, funds, paid services, bundling into other products and paid signals need a separate commercial license: open an issue titled "Commercial license" in this GitHub repository. See [LICENSE](LICENSE) for the full terms.
+---
+
+Built by [AXNli](https://axnli.com), a team that designs data and AI workflows.

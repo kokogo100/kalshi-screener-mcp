@@ -1,0 +1,80 @@
+{
+  "manifest_version": 3,
+  "minimum_chrome_version": "120",
+  "name": "Kalshi Screener",
+  "description": "Independent screener and alerts for Kalshi markets using public data. Not affiliated with Kalshi. Read-only, no trading.",
+  "version": "0.3.0",
+  "action": {
+    "default_title": "Open Kalshi Screener",
+    "default_icon": {
+      "16": "icons/16X16.png",
+      "32": "icons/32X32.png",
+      "48": "icons/48X48.png",
+      "64": "icons/64X64.png",
+      "128": "icons/128X128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "side_panel.html"
+  },
+  "permissions": [
+    "storage",
+    "sidePanel",
+    "alarms",
+    "notifications",
+    "offscreen",
+    "scripting",
+    "activeTab",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.openai.com/*",
+    "https://models.github.ai/*",
+    "https://models.inference.ai.azure.com/*",
+    "https://api.groq.com/*",
+    "https://api.deepseek.com/*",
+    "https://api.mistral.ai/*",
+    "https://dashscope-intl.aliyuncs.com/*",
+    "https://api.x.ai/*",
+    "https://api.anthropic.com/*",
+    "https://integrate.api.nvidia.com/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://external-api.kalshi.com/*",
+    "https://api.elections.kalshi.com/*",
+    "https://external-api.demo.kalshi.co/*",
+    "https://demo-api.kalshi.co/*",
+    "wss://external-api-ws.kalshi.com/*",
+    "wss://api.elections.kalshi.com/*",
+    "wss://external-api-ws.demo.kalshi.co/*",
+    "wss://demo-api.kalshi.co/*"
+  ],
+  "icons": {
+    "16": "icons/16X16.png",
+    "32": "icons/32X32.png",
+    "48": "icons/48X48.png",
+    "64": "icons/64X64.png",
+    "128": "icons/128X128.png",
+    "512": "icons/512X512.png"
+  },
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "open.html",
+        "src/open.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
