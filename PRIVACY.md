@@ -1,6 +1,6 @@
 # Kalshi Screener privacy summary
 
-Updated 2026-10-23. This extension observes markets and does not execute trades. Kalshi Screener is an independent tool and is not affiliated with, endorsed by or sponsored by Kalshi.
+Updated 2026-11-03. This extension observes markets and does not execute trades. Kalshi Screener is an independent tool and is not affiliated with, endorsed by or sponsored by Kalshi.
 
 Public market requests go to Kalshi. Optional read-only account access uses the Key ID and RSA or Ed25519 private key you enter in Settings; the private key signs requests locally. AI connections use the API credentials and endpoint you select. A web subscription does not automatically provide API access.
 
@@ -10,9 +10,9 @@ Settings and credentials are stored in this Chrome profile's local extension sto
 
 Photographs are cropped and opaque-masked into a new PNG before attachment. Review the outgoing image and AI destinations before confirming transmission. Cancel and attachment deletion do not transmit the photograph. Visible-tab capture requires an explicit activeTab grant and captures the webpage's visible area. It is not a screenshot of the browser controls or side panel.
 
-Website alerts are off by default. On sites you explicitly allow, matching market titles and saved formula text can appear in an isolated notification. Disable a site in Monitoring & Data to stop future site alerts. Disabling this feature does not revoke host access that an AI connection may also use; Chrome manages extension site permissions.
+Website alerts are off by default. On sites you explicitly allow, matching market titles and saved formula text can appear in an isolated notification. Disable a site in Alerts & Monitoring to stop future site alerts. Disabling this feature does not revoke host access that an AI connection may also use; Chrome manages extension site permissions.
 
-This version shows no advertisements and does not contact any advertising network. If ad slots are added later, they will appear only inside the extension, never in Chrome or OS notifications or on other websites, and this policy will be updated first. The extension has no added analytics service.
+The extension shows no advertisements, contacts no advertising network and has no analytics service.
 
 AI agent sharing (MCP) is off by default. When you turn on "Share with the MCP server on this computer" in Settings, AI Agents (MCP), the extension sends your condition presets, watchlist and up to 200 recent alerts to the Kalshi Screener MCP server at 127.0.0.1 (port 47811 unless you change it). This data stays on your computer; the MCP server stores it in a local file and gives it to the AI apps you connect. API keys, private keys, AI settings, chat history and photographs are never sent. The extension sends nothing over the network for this feature. Turning sharing off stops future updates; delete the MCP server's state file (~/.kalshi-screener/mcp-state.json by default) to remove data already shared.
 
@@ -24,4 +24,6 @@ Market links from AI apps open the extension page open.html, which only reads a 
 
 Stop monitoring before restoring data. Chrome shutdown, sleep and offline periods delay checks. OS notification submission does not prove that a banner was visible. Removing the extension removes its Chrome profile storage; exported files are separately under your control.
 
-Store publication and production readiness remain subject to the integration acceptance record. This document describes the current code and does not claim an independent security audit.
+Open source under the MIT License: https://github.com/kokogo100/kalshi-screener-mcp. Privacy questions: contact@axnli.com.
+
+This document describes the current version of the extension.

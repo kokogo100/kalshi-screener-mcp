@@ -36,7 +36,7 @@ function withSubrequestBudget(run) {
     globalThis.fetch = (...args) => {
       const counter = budget.getStore();
       if (counter && ++counter.used > SUBREQUEST_BUDGET) {
-        return Promise.reject(new Error("This search needs more Kalshi requests than a free Cloudflare Worker allows. Narrow it with scope closing_24h or closing_7d, or run the local server with npx kalshi-screener-mcp."));
+        return Promise.reject(new Error("This search needs more Kalshi requests than a free Cloudflare Worker allows. Narrow it with scope closing_24h or closing_7d, or run the local mcp-server with node bin/cli.js."));
       }
       return realFetch(...args);
     };
